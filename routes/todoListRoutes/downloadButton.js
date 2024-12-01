@@ -6,6 +6,7 @@ router.route("/").get((req, res) => {
   res.render("todoListViews/DownloadButton");
 });
 
+// http://localhost:3000/downloadButton/download
 router.route("/download").get((req, res) => {
   res.download("./gold-star.webp");
 });

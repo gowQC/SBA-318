@@ -19,26 +19,49 @@ This page presents all the options available for the user to navigate through.
 
 * Shows user the current data of 'todoList'
 * Presents a navigational link that directs towards 'http://localhost:3000/modifyList'
+* Supports GET and PUT requests
 
 - http://localhost:3000/todoList/:listItem
 
 * Filters for only the one item in the index of the entire 'todoList' array
 * Displays error text if the 'listItem' variable is either invalid or too large of an index value
+* Supports GET requests
 
 - http://localhost:3000/modifyList
 
 * Displays small form underneath the current data of 'todoList'
 * Form allows for the completion of one task at a time, then redirects to 'http://localhost:3000/todoList'
+* Supports GET requests
 
 - http://localhost:3000/downloadButton
 
 * Able to redirect here to simulate a reward for completing all tasks from the todoList data, but users can navigate here on their own through the search bar.
 * Clicking the link redirects users to '# http://localhost:3000/download'
+* Supports GET requests
 
-- http://localhost:3000/download
+- http://localhost:3000/downloadButton/download
 
-* Downloads a gold star image for user on GET request
+* Downloads a gold star image for user with only support for GET request
 
 # Grades Routes
+
+- http://localhost:3000/grades
+
+* Shows user the current data of 'grades'
+* Presents a navigational link that directs towards 'http://localhost:3000/grades/modifyGrades'
+* Supports GET, POST, and PUT methods
+* GET methods allow for ?courseName={string} query
+
+- http://localhost:3000/grades/modifyGrades
+
+* Displays two forms underneath the current data of 'grades' - PUT and POST forms
+* Forms are able to either add or mutate data, then redirects changes/additions to 'http://localhost:3000/grades'
+* Supports GET requests
+
+- http://localhost:3000/grades/:courseName
+
+* Filters for one value as a string that must match one of the 'grades' array's objects' course_name values.
+* Console logs error text if the 'courseName' variable is not found
+* Supports GET requests
 
 # Workouts Routes
