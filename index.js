@@ -27,9 +27,9 @@ app.set("views", "./views");
 app.engine("jsx", jsxViewEngine());
 
 // routes variables
-const todoList = require("./routes/todoList");
-const modifyList = require("./routes/modifyList");
-const downloadButton = require("./routes/downloadButton");
+const todoList = require("./routes/todoListRoutes/todoList");
+const modifyList = require("./routes/todoListRoutes/modifyList");
+const downloadButton = require("./routes/todoListRoutes/downloadButton");
 
 // third party middleware variables
 const methodOverride = require("method-override"); // npm install method-override
