@@ -7,6 +7,15 @@
  * npm install body-parser
  */
 
+/**
+ * NEED:
+ *  two more data categories
+ *  routes for all data that should be exposed to the client (get routes to access all data)
+ *  allow for at least ONE POST to one data file
+ *  allow for at least ONE DELETE to one data file
+ *  at least one data file should support searching through req.params
+ */
+
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;

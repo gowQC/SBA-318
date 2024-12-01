@@ -25,10 +25,7 @@ router.route("/:listItem").get((req, res) => {
     const num = Number(req.params.listItem);
     if (Math.floor(num) < todoListData.length && Math.floor(num) >= 0) {
       const value = [todoListData[req.params.listItem]];
-      // console.log(value);
-      res.render("ListView", { value }); // tried to render, but had issues
-      // res.json(todoList[req.params.listItem]);
-      // res.send("OK");
+      res.render("ListView", { value });
     } else {
       res.send("Request parameter is a number, but not a valid index.");
     }
