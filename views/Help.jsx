@@ -25,8 +25,7 @@ class Help extends React.Component {
             <br />
             <h2>Workouts Routes:</h2>
             <li>'workouts'</li>
-            <li>'addWorkouts'</li>
-            <li>'changeWorkouts'</li>
+            <li>'modifyWorkouts'</li>
           </ul>
           <p>Finishing the whole list will earn you a surprise!</p>
         </body>

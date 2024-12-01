@@ -7,14 +7,6 @@
  * npm install body-parser
  */
 
-/**
- * NEED:
- *  one more data category
- *  routes for all data that should be exposed to the client (get routes to access all data)
- *  allow for at least ONE DELETE to one data file
- *  at least one data file should support searching through req.params
- */
-
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,10 +21,10 @@ app.engine("jsx", jsxViewEngine());
 const todoList = require("./routes/todoListRoutes/todoList");
 const modifyList = require("./routes/todoListRoutes/modifyList");
 const downloadButton = require("./routes/todoListRoutes/downloadButton");
-// gradesRoutes variables
+// gradesRoutes variable
 const grades = require("./routes/gradesRoutes/grades");
-// const modifyList = require("./routes/todoListRoutes/modifyList");
-// const downloadButton = require("./routes/todoListRoutes/downloadButton");
+// workoutRoutes variable
+const workouts = require("./routes/workoutsRoutes/workouts");
 
 // third party middleware variables
 const methodOverride = require("method-override"); // npm install method-override
@@ -40,10 +32,12 @@ const bodyParser = require("body-parser"); // npm install body-parser
 
 // setting time variable as let because it will eventually be reset when the ten minutes pass
 let dueTime = new Date();
-dueTime.setMinutes(dueTime.getMinutes() + 1); // based off curent time, sets due time (10 minutes ahead)
+dueTime.setMinutes(dueTime.getMinutes() + 5); // based off curent time, sets due time (10 minutes ahead)
 
-// data variables - referenced here for when they need to be reset
+// data variables - referenced here for when they need to be reset OR when running function in 2nd custom middleware
 const todoListData = require("./data/todo-list-array");
+const gradesData = require("./data/grades-array");
+const workoutsData = require("./data/workouts-array");
 
 // my custom middleware
 app.use((req, res, next) => {
@@ -58,8 +52,14 @@ app.use((req, res, next) => {
       todoListData[i].completed = false;
     }
 
+    // resets workoutsData boolean
+    for (let i = 0; i < workoutsData.length; i++) {
+      workoutsData[i].currently_completed = 0;
+      workoutsData[i].completed = false;
+    }
+
     dueTime = new Date();
-    dueTime.setMinutes(dueTime.getMinutes() + 1);
+    dueTime.setMinutes(dueTime.getMinutes() + 5);
   } else {
     const totalSeconds = Math.floor(timeDiff / 1000);
     const minutes = Math.floor(totalSeconds / 60);
@@ -79,6 +79,26 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true })); // handles form submissions
 app.use(bodyParser.json({ extended: true }));
 
+function checkAll() {
+  let myBoolean = true;
+  for (let i = 0; i < todoListData.length; i++) {
+    if (todoListData[i].completed === false) {
+      myBoolean = false;
+    }
+  }
+  for (let i = 0; i < gradesData.length; i++) {
+    if (gradesData[i].passing === false) {
+      myBoolean = false;
+    }
+  }
+  for (let i = 0; i < workoutsData.length; i++) {
+    if (workoutsData[i].completed === false) {
+      myBoolean = false;
+    }
+  }
+  return myBoolean;
+}
+
 app.use((req, res, next) => {
   const currentDate = new Date();
   console.log(
@@ -92,6 +112,13 @@ app.use((req, res, next) => {
     console.log(`Containing the data:`);
     console.log(`${JSON.stringify(req.body)}`);
   }
+  if (checkAll()) {
+    console.log(
+      "Hooray! All grades are passing and all daily activites are done!"
+    );
+  } else {
+    console.log("Not everything is complete, but keep trying!");
+  }
   next();
 });
 
@@ -102,8 +129,10 @@ app.use(express.static("public")); // used for CSS file
 app.use("/todoList", todoList);
 app.use("/modifyList", modifyList);
 app.use("/downloadButton", downloadButton);
-// grades routes
+// grades route
 app.use("/grades", grades);
+// workouts route
+app.use("/workouts", workouts);
 
 app.get("/", (req, res) => {
   res.send(
