@@ -21,8 +21,7 @@ class Help extends React.Component {
             <br />
             <h2>Grades Routes:</h2>
             <li>'grades'</li>
-            <li>'addGrades'</li>
-            <li>'changeGrades'</li>
+            <li>'grades/modifyGrades'</li>
             <br />
             <h2>Workouts Routes:</h2>
             <li>'workouts'</li>
