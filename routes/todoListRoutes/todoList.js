@@ -8,7 +8,7 @@ const todoListData = require("../../data/todo-list-array");
 router
   .route("/")
   .get((req, res) => {
-    res.render("ListView", { todoListData });
+    res.render("todoListViews/ListView", { todoListData });
   })
   .put((req, res) => {
     if (req.body.completed === "on") {
@@ -25,14 +25,13 @@ router.route("/:listItem").get((req, res) => {
     const num = Number(req.params.listItem);
     if (Math.floor(num) < todoListData.length && Math.floor(num) >= 0) {
       const value = [todoListData[req.params.listItem]];
-      res.render("ListView", { value });
+      res.render("todoListViews/ListView", { value });
     } else {
       res.send("Request parameter is a number, but not a valid index.");
     }
   } else {
     res.send("Request parameter is not a number.");
   }
-  // ;
 });
 
 module.exports = router;

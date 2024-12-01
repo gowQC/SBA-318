@@ -6,7 +6,7 @@ const todoListData = require("../../data/todo-list-array");
 
 // http://localhost:3000/modifyList
 router.route("/").get((req, res) => {
-  res.render("Modify", { todoListData });
+  res.render("todoListViews/Modify", { todoListData });
 });
 
 module.exports = router;

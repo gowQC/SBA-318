@@ -9,9 +9,8 @@
 
 /**
  * NEED:
- *  two more data categories
+ *  one more data category
  *  routes for all data that should be exposed to the client (get routes to access all data)
- *  allow for at least ONE POST to one data file
  *  allow for at least ONE DELETE to one data file
  *  at least one data file should support searching through req.params
  */
@@ -26,10 +25,14 @@ app.set("view engine", "jsx");
 app.set("views", "./views");
 app.engine("jsx", jsxViewEngine());
 
-// routes variables
+// todoListRoutes variables
 const todoList = require("./routes/todoListRoutes/todoList");
 const modifyList = require("./routes/todoListRoutes/modifyList");
 const downloadButton = require("./routes/todoListRoutes/downloadButton");
+// gradesRoutes variables
+const grades = require("./routes/gradesRoutes/grades");
+// const modifyList = require("./routes/todoListRoutes/modifyList");
+// const downloadButton = require("./routes/todoListRoutes/downloadButton");
 
 // third party middleware variables
 const methodOverride = require("method-override"); // npm install method-override
@@ -48,7 +51,7 @@ app.use((req, res, next) => {
   const timeDiff = dueTime.getTime() - currentTime.getTime(); // difference in time
   if (timeDiff <= 0) {
     // hits due time or past due time - reset values and set another 10 minutes
-    console.log(`Past due! Resetting values of all activities.`);
+    console.log(`It's a new day! Resetting values of all daily activities.`);
 
     // reset todoListData
     for (let i = 0; i < todoListData.length; i++) {
@@ -95,9 +98,12 @@ app.use((req, res, next) => {
 // import routes and other middleware variables we just created
 app.use(methodOverride("_method"));
 app.use(express.static("public")); // used for CSS file
+// todoList routes
 app.use("/todoList", todoList);
 app.use("/modifyList", modifyList);
 app.use("/downloadButton", downloadButton);
+// grades routes
+app.use("/grades", grades);
 
 app.get("/", (req, res) => {
   res.send(
