@@ -26,11 +26,46 @@ const downloadButton = require("./routes/downloadButton");
 const methodOverride = require("method-override"); // npm install method-override
 const bodyParser = require("body-parser"); // npm install body-parser
 
-// initial custom middleware
+// setting time variable as let because it will eventually be reset when the ten minutes pass
+let dueTime = new Date();
+dueTime.setMinutes(dueTime.getMinutes() + 1); // based off curent time, sets due time (10 minutes ahead)
+
+// data variables - referenced here for when they need to be reset
+const todoListData = require("./data/todo-list-array");
+
+// my custom middleware
 app.use((req, res, next) => {
-  console.log("I run from all middleware.");
+  const currentTime = new Date(); // grabs date at time of calling middleware
+  const timeDiff = dueTime.getTime() - currentTime.getTime(); // difference in time
+  if (timeDiff <= 0) {
+    // hits due time or past due time - reset values and set another 10 minutes
+    console.log(`Past due! Resetting values of all activities.`);
+
+    // reset todoListData
+    for (let i = 0; i < todoListData.length; i++) {
+      todoListData[i].completed = false;
+    }
+
+    dueTime = new Date();
+    dueTime.setMinutes(dueTime.getMinutes() + 1);
+  } else {
+    const totalSeconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    console.log(
+      `${
+        minutes > 0 ? `${minutes} minute${minutes > 1 ? "s" : ""} and ` : ""
+      }${seconds} second${
+        seconds !== 1 ? "s" : ""
+      } remaining to complete all activities.`
+    );
+  }
   next();
 });
+
+// bodyParser middleware located here so that we can see req.body in upcoming custom middleware
+app.use(bodyParser.urlencoded({ extended: true })); // handles form submissions
+app.use(bodyParser.json({ extended: true }));
 
 app.use((req, res, next) => {
   const currentDate = new Date();
@@ -40,6 +75,7 @@ app.use((req, res, next) => {
       req.method
     } request to ${req.url}.`
   );
+  console.log(req.body);
   if (req.body && Object.keys(req.body).length > 0) {
     console.log(`Containing the data:`);
     console.log(`${JSON.stringify(req.body)}`);
@@ -47,10 +83,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// import routes and middleware variables we just created
-app.use(bodyParser.urlencoded({ extended: true })); // handles form submissions
-app.use(bodyParser.json({ extended: true }));
+// import routes and other middleware variables we just created
 app.use(methodOverride("_method"));
+app.use(express.static("public")); // used for CSS file
 app.use("/todoList", todoList);
 app.use("/modifyList", modifyList);
 app.use("/downloadButton", downloadButton);
@@ -63,6 +98,14 @@ app.get("/", (req, res) => {
 
 app.get("/help", (req, res) => {
   res.render("Help");
+});
+
+// error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack); // console error details
+  res
+    .status(err.status || 500)
+    .json({ error: err.message || "Internal Server Error" });
 });
 
 app.use((req, res) => {

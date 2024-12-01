@@ -1,0 +1,21 @@
+/*for all JSX*/
+body {
+  background-color: rgb(87, 83, 83);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  flex-direction: column;
+}
+
+li {
+  list-style-type: none;
+}
+
+/*list stuff*/
+img {
+  width: 200px;
+  height: 240px;
+  /* margin: 10px auto; */
+}
